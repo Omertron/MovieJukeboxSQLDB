@@ -22,16 +22,27 @@
  */
 package com.moviejukebox.mjbsqldb;
 
-import com.moviejukebox.mjbsqldb.dto.*;
+import com.moviejukebox.mjbsqldb.dto.ArtworkDTO;
+import com.moviejukebox.mjbsqldb.dto.CertificationDTO;
+import com.moviejukebox.mjbsqldb.dto.CodecDTO;
+import com.moviejukebox.mjbsqldb.dto.CompanyDTO;
+import com.moviejukebox.mjbsqldb.dto.CountryDTO;
+import com.moviejukebox.mjbsqldb.dto.GenreDTO;
+import com.moviejukebox.mjbsqldb.dto.LanguageDTO;
+import com.moviejukebox.mjbsqldb.dto.PersonDTO;
+import com.moviejukebox.mjbsqldb.dto.VideoDTO;
+import com.moviejukebox.mjbsqldb.dto.VideoFileDTO;
+import com.moviejukebox.mjbsqldb.dto.VideoFilePartDTO;
+import com.moviejukebox.mjbsqldb.dto.VideoSiteDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class DatabaseWriter {
 
-    private static final Logger LOGGER = Logger.getLogger(DatabaseWriter.class);
-    private static final String LOG_MESSAGE = "dbWriter: ";
+    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseWriter.class);
     // Join tables
     private static final String JOIN_TABLES = "insert into ? (VIDEO_ID, ?) values (?, ?)";
     // Delete Ids
@@ -725,7 +736,7 @@ public final class DatabaseWriter {
         try {
             deleteIdFromTable(connection, "video_site", "video_id", videoSite.getVideoId(), "site", videoSite.getSite());
         } catch (SQLException ex) {
-            LOGGER.debug(LOG_MESSAGE + "Error deleting VideoId '" + videoSite.getVideoId() + "' from database: " + ex.getMessage());
+            LOGGER.debug("Error deleting VideoId '" + videoSite.getVideoId() + "' from database: " + ex.getMessage());
         }
 
         try {

@@ -31,13 +31,13 @@ import java.sql.SQLException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sqlite.SQLiteJDBCLoader;
 
 public class MjbSqlDb {
 
-    private static final Logger LOGGER = Logger.getLogger(MjbSqlDb.class);
-    private static final String LOG_MESSAGE = "MjbSqlDB: ";
+    private static final Logger LOG = LoggerFactory.getLogger(MjbSqlDb.class);
     private static final float VERSION = 1.4f;
     private Connection connection = null;
     private boolean driverOk = initDriver();
@@ -47,6 +47,7 @@ public class MjbSqlDb {
      *
      * @param dbPath
      * @param dbName
+     * @throws java.sql.SQLException
      */
     public MjbSqlDb(String dbPath, String dbName) throws SQLException {
         if (!driverOk) {
@@ -78,7 +79,7 @@ public class MjbSqlDb {
             connection.setAutoCommit(false);
 
             if (VERSION > getDbVersion()) {
-                LOGGER.info(LOG_MESSAGE + "Updating database structure...");
+                LOG.info("Updating database structure...");
                 // This is overkill, but OK for the time being
                 DatabaseTools.deleteTables(connection);
             }
@@ -104,7 +105,7 @@ public class MjbSqlDb {
         try {
             return DatabaseTools.getDatabaseVersion(connection);
         } catch (SQLException error) {
-            LOGGER.info(LOG_MESSAGE + "Database version out of date. Updating...");
+            LOG.info("Database version out of date. Updating...");
             return 0.0f;
         }
     }
@@ -117,13 +118,13 @@ public class MjbSqlDb {
     private boolean initDriver() throws SQLException {
         try {
             Class.forName("org.sqlite.JDBC");
-            LOGGER.info(LOG_MESSAGE + "Driver running in " + (SQLiteJDBCLoader.isNativeMode() ? "native" : "pure-java") + " mode");
+            LOG.info("Driver running in " + (SQLiteJDBCLoader.isNativeMode() ? "native" : "pure-java") + " mode");
             return Boolean.TRUE;
         } catch (ExceptionInInitializerError ex) {
             throw new SQLException("Error initializing the database driver: " + ex.getMessage(), ex);
-        } catch (LinkageError ex) {
+        } catch (LinkageError | ClassNotFoundException ex) {
             throw new SQLException("Error initializing the database driver: " + ex.getMessage(), ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (Exception ex) {
             throw new SQLException("Error initializing the database driver: " + ex.getMessage(), ex);
         }
     }
@@ -136,7 +137,7 @@ public class MjbSqlDb {
             try {
                 connection.close();
             } catch (SQLException ex) {
-                LOGGER.debug(LOG_MESSAGE + "Failed to properly close the connection: " + ex.getMessage());
+                LOG.debug("Failed to properly close the connection: " + ex.getMessage());
             }
         }
     }
