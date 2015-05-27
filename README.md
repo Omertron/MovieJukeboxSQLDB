@@ -3,9 +3,7 @@ MovieJukebox SQL DB
 
 Author: Stuart Boston (Omertron AT Gmail DOT com)
 
-Originally written for use by Yet Another Movie Jukebox [(YAMJ)](http://code.google.com/p/moviejukebox/)
-
-But anyone can use it for other projects as well.
+Originally written for use by YetAnotherMovieJukebox ([YAMJv2](https://github.com/YAMJ/yamj-v2) & [YAMJv3](https://github.com/YAMJ/yamj-v3)), but anyone can feel free to use it for other projects as well.
 
 Instructions / Usage
 --------------------
